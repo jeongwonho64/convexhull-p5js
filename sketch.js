@@ -1,8 +1,8 @@
 var editbutton,mode,cancelbutton,resetbutton,convexhullbutton;
-var points = [],hull = [];
+var points = [],hull = [], hulllines = [];
 var startframe = 0, endframe = 0;
 var i_loop = 0, percentage = 0;
-var line_start, line_end, undraw;
+var line_start, line_end, undraw, indexed;
 function setup(){
     createCanvas(windowWidth, windowHeight);
     background(255);
@@ -21,6 +21,15 @@ function createButtons(){
     resetbutton.locate(200, 0);
     convexhullbutton.locate(300, 0);
     editbutton.onPress = function(){
+        if(mode == "hull" || mode == "index"){
+            background(255);
+            points = [];
+            hull = [];
+            i_loop = 0;
+            percentage = 0;
+            undraw = 0;
+            indexed = false;
+        }
         mode = "edit";
     }
     cancelbutton.onPress = function(){
@@ -32,9 +41,11 @@ function createButtons(){
         background(255);
         points = [];
         hull = [];
+        hulllines = [];
         i_loop = 0;
         percentage = 0;
         undraw = 0;
+        indexed = false;
     }
     convexhullbutton.onPress = function(){
         if(mode != "hull" && mode != "index" && points.length > 2){
@@ -113,7 +124,7 @@ function draw(){
         for(var i = 0; i <= i_loop; i++){
             push();
                 stroke("#ce9102");
-                noFill();
+                fill(255);
                 circle(points[hull[i]].x,points[hull[i]].y,60);
                 fill("#ce9102");
                 textSize(32);
@@ -130,20 +141,19 @@ function draw(){
 }
 
 function mousePressed(){
-    if(mode == "edit" && (mouseX > 400 || mouseY > 100)){
-        circle(mouseX,mouseY,60);
+    if(mode == "edit" && (mouseX > 400 || mouseY > 100) && (mouseX < width - 30 && mouseX > 30) && (mouseY < height - 30 && mouseY > 30)){
         points.push(createVector(mouseX,mouseY));
     }
 }
-function drawLine(hull_loop, percentage){
-    var dist = line_start.dist(line_end);
+function drawLine(percentage, color, strokeSize = 5){
     var start = line_start.copy();
     var anim_end = start.copy();
     var end = line_end.copy();
     anim_end.lerp(end, percentage);
     push();
+    stroke(color);
     strokeCap(SQUARE);
-    strokeWeight(5);
+    strokeWeight(strokeSize);
     line(start.x,start.y,anim_end.x,anim_end.y);
     pop();
 }
