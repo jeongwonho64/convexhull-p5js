@@ -7,11 +7,16 @@ function guide(){
     if(slide == 0){
         push();
         textSize(20);
+        rect(90,250,1250,300,20);
         textAlign(LEFT,CENTER);
         text(simul_info,100,100,windowWidth-150,windowHeight-150);
         pop();
     }
     else if(slide == 1){
+        push();
+        rectMode(CENTER);
+        rect(windowWidth/2 - 30,windowHeight/2-50,550,300,20)
+        pop();
         push();
         textSize(20);
         textAlign(CENTER,CENTER);
