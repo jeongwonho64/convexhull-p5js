@@ -1,21 +1,33 @@
-var editbutton,mode,cancelbutton,resetbutton,convexhullbutton;
+var editbutton,mode,resetbutton,convexhullbutton;
 var points = [],hull = [], hulllines = [];
 var startframe = 0, endframe = 0;
 var i_loop = 0, percentage = 0;
 var line_start, line_end, undraw, indexed, hulled;
+
+function preload(){
+    simul_info = loadStrings("simulation_info.txt");
+    usage_info = loadStrings("usage_info.txt");
+}
+
 function setup(){
     createCanvas(windowWidth, windowHeight);
     background(255);
     frameRate(60);
     createButtons();
+    simul_info = simul_info[0];
+    usage_info = usage_info[0];
+    simul_info = simul_info.replace(/\\n/g,"\n");
+    usage_info = usage_info.replace(/\\n/g,"\n");
 }
 
 
 function draw(){
     editbutton.draw();
-    cancelbutton.draw();
     resetbutton.draw();
     convexhullbutton.draw();
+    if(mode == "guide"){
+        guide();
+    }
     if(mode == "index"){
         index();
     }
@@ -67,7 +79,7 @@ function mousePressed(){
     }
 }
 function bounded(){
-    if((mouseX > 400 || mouseY > 100) && (mouseX < width - 30 && mouseX > 30) && (mouseY < height - 30 && mouseY > 30)){
+    if((mouseX > 330 || mouseY > 130) && (mouseX < width - 30 && mouseX > 30) && (mouseY < height - 30 && mouseY > 30)){
         return true;
     }
     return false;
